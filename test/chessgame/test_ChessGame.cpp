@@ -17,7 +17,7 @@
  */
 
 #include <iostream>
-#include <extras_cpp/game/ChessGame.hpp>
+#include <extras_mon/game/ChessGame.hpp>
 
 #include "../vendor/catch.hpp"
 
