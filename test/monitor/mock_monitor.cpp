@@ -17,7 +17,7 @@
  */
 
 #include <iostream>
-#include <extras_mon/game/ChessGame.hpp>
+#include <extras_mon/monitor.hpp>
 
 #include "../vendor/catch.hpp"
 #include "../vendor/fakeit.hpp"
@@ -25,12 +25,25 @@
 using namespace extras;
 using namespace fakeit;
 
-SCENARIO("Mock ChessGameInterface: toOctal", "[CHES-9]") {
+SCENARIO("Mock MonitorInterface", "[MonitorInterface]") {
 
-    Mock<mon::ChessGameInterface> mock;
-    When(Method(mock, moves)).Return();
+    bool wasTriggered = false;
+    bool wasExecuted = false;
+    Mock<mon::MonitorInterface> mock;
+    When(Method(mock, event)).AlwaysDo([&wasExecuted]() {
+        wasExecuted = true;
+        });
+    mon::MonitorInterface& i = mock.get();
+    When(Method(mock, trigger)).AlwaysDo([&wasTriggered, &i]() {
+        wasTriggered = true;
+        i.event();
+        });
 
-    mon::ChessGameInterface& i = mock.get();
-    i.moves();
-    Verify(Method(mock, moves));
+    REQUIRE(wasTriggered == false);
+    REQUIRE(wasExecuted == false);
+    i.trigger();
+    REQUIRE(wasTriggered == true);
+    REQUIRE(wasExecuted == true);
+    Verify(Method(mock, event));
+    Verify(Method(mock, trigger));
 }

@@ -1,7 +1,7 @@
 /**
- * @file ChessGame.hpp
+ * @file Monitor.hpp
  * @author Perry Anderson (perry@exparx.com)
- * @brief Sample Header file
+ * @brief MonitorInterface
  * @version 0.1
  * @date 2021-11-30
  *
@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef _CHESSGAME_HPP
-#define _CHESSGAME_HPP
+#ifndef _EXTRAS_MONITOR_HPP
+#define _EXTRAS_MONITOR_HPP
 
  /**
   * @brief the "MIT/X Consortium License", (adapted for EXPARX.COM)
@@ -37,32 +37,36 @@ namespace extras {
     namespace mon {
 
         /**
-         * @brief ChessGameInterface
+         * @brief MonitorInterface
          *
          */
-        interface ChessGameInterface
+        interface MonitorInterface
         {
 
             /**
-             * @brief moves()
-             * @return all the chess moves of the given chess game
+             * @brief event
+             * @note will be called from the trigger()
              */
-            virtual void moves() const pure;
+            virtual void event() pure;
+
+            /**
+             * @brief trigger()
+             * @note will determine if the event needs to be called
+             *
+             */
+            virtual void trigger() pure;
 
         };
 
         /**
-         * @brief ChessGame
+         * @brief Monitor
          *
          */
-        concrete class ChessGame implements ChessGameInterface
+        concrete class Monitor implements MonitorInterface
         {
 
-            /**
-             * @brief moves()
-             * @return all the chess moves of the given chess game
-             */
-            virtual void moves() const override;
+            virtual void event()  override;
+            virtual void trigger()  override;
 
         };
 
@@ -89,4 +93,4 @@ namespace extras {
     } // end namespace 
 }
 
-#endif // _CHESSGAME_HPP
+#endif // _EXTRAS_MONITOR_HPP

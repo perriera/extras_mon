@@ -17,20 +17,41 @@
  */
 
 #include <iostream>
-#include <extras_mon/game/ChessGame.hpp>
+#include <extras_mon/monitor.hpp>
 
 #include "../vendor/catch.hpp"
 #include "../vendor/fakeit.hpp"
 
 using namespace extras;
-using namespace fakeit;
 
-SCENARIO("Mock ChessGameInterface: toOctal", "[CHES-9]") {
+/**
+ * @brief Monitor
+ *
+ */
+concrete struct SampleMonitor implements mon::MonitorInterface
+{
 
-    Mock<mon::ChessGameInterface> mock;
-    When(Method(mock, moves)).Return();
+    bool wasTriggered = false;
+    bool wasExecuted = false;
 
-    mon::ChessGameInterface& i = mock.get();
-    i.moves();
-    Verify(Method(mock, moves));
+    virtual void event()  override {
+        wasExecuted = true;
+    }
+    virtual void trigger()  override {
+        wasTriggered = true;
+        event();
+    }
+
+};
+
+SCENARIO("Test MonitorInterface", "[MonitorInterface]") {
+
+    SampleMonitor sample;
+    mon::MonitorInterface& i = sample;
+
+    REQUIRE(sample.wasTriggered == false);
+    REQUIRE(sample.wasExecuted == false);
+    i.trigger();
+    REQUIRE(sample.wasTriggered == true);
+    REQUIRE(sample.wasExecuted == true);
 }
