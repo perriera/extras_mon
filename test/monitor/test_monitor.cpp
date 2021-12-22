@@ -23,27 +23,35 @@
 #include "../vendor/fakeit.hpp"
 
 using namespace extras;
-using namespace fakeit;
 
-SCENARIO("Mock MonitorInterface", "[MonitorInterface]") {
+/**
+ * @brief Monitor
+ *
+ */
+concrete struct SampleMonitor implements mon::MonitorInterface
+{
 
     bool wasTriggered = false;
     bool wasExecuted = false;
-    Mock<mon::MonitorInterface> mock;
-    When(Method(mock, event)).AlwaysDo([&wasExecuted]() {
-        wasExecuted = true;
-        });
-    mon::MonitorInterface& i = mock.get();
-    When(Method(mock, trigger)).AlwaysDo([&wasTriggered, &i]() {
-        wasTriggered = true;
-        i.event();
-        });
 
-    REQUIRE(wasTriggered == false);
-    REQUIRE(wasExecuted == false);
+    virtual void event()  override {
+        wasExecuted = true;
+    }
+    virtual void trigger()  override {
+        wasTriggered = true;
+        event();
+    }
+
+};
+
+SCENARIO("Test MonitorInterface", "[MonitorInterface]") {
+
+    SampleMonitor sample;
+    mon::MonitorInterface& i = sample;
+
+    REQUIRE(sample.wasTriggered == false);
+    REQUIRE(sample.wasExecuted == false);
     i.trigger();
-    REQUIRE(wasTriggered == true);
-    REQUIRE(wasExecuted == true);
-    Verify(Method(mock, event));
-    Verify(Method(mock, trigger));
+    REQUIRE(sample.wasTriggered == true);
+    REQUIRE(sample.wasExecuted == true);
 }

@@ -34,7 +34,7 @@
 #include <extras/interfaces.hpp>
 
 namespace extras {
-    namespace cpp {
+    namespace mon {
 
         /**
          * @brief MonitorInterface
@@ -47,14 +47,14 @@ namespace extras {
              * @brief event
              * @note will be called from the trigger()
              */
-            virtual void event() const pure;
+            virtual void event() pure;
 
             /**
              * @brief trigger()
              * @note will determine if the event needs to be called
              *
              */
-            virtual void trigger() const pure;
+            virtual void trigger() pure;
 
         };
 
@@ -65,8 +65,8 @@ namespace extras {
         concrete class Monitor implements MonitorInterface
         {
 
-            virtual void event() const override;
-            virtual void trigger() const override;
+            virtual void event()  override;
+            virtual void trigger()  override;
 
         };
 

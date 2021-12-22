@@ -34,7 +34,7 @@
 #include <extras/interfaces.hpp>
 
 namespace extras {
-    namespace cpp {
+    namespace mon {
 
         /**
          * @brief ChessGameInterface
