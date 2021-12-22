@@ -80,7 +80,7 @@ where approapriate.
      # tested for use with EXTRAS_MON_PRODUCTION flag. So, there might be
      # a hiccup in here that needs to be worked out, (reader beware).
      #
-     # see also MAKE_EXTRAS_MON_LIBRARY_EXECUTABLES
+     # see also MAKE_EXTRAS_MON_LIBRARY_TOOLS
      #
      # This second flag will allow both the shared libraries and any executatbles
      # (but not the unit tests) to be compiled.

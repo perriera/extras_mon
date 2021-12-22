@@ -66,7 +66,7 @@ option(EXTRAS_MON_PRODUCTION "Production build" OFF)
 # tested for use with EXTRAS_MON_PRODUCTION flag. So, there might be 
 # a hiccup in here that needs to be worked out, (reader beware).
 #
-# see also MAKE_EXTRAS_MON_LIBRARY_EXECUTABLES
+# see also MAKE_EXTRAS_MON_LIBRARY_TOOLS
 #
 # This second flag will allow both the shared libraries and any executatbles
 # (but not the unit tests) to be compiled.
@@ -122,21 +122,26 @@ print(STATUS "CMAKE_C_FLAGS: ${CMAKE_C_FLAGS}")
 # MAKE_SPDLOG_SHARED OFF" -- Matt Williams, October, 2021
 #
 CPMAddPackage(
-  NAME extras
-  GITHUB_REPOSITORY perriera/extras
-  VERSION 5.22.0
+  NAME extras_rsi
+  GITHUB_REPOSITORY perriera/extras_rsi
+  VERSION 4.16.0
   OPTIONS "MAKE_SPDLOG_SHARED OFF"
   OPTIONS "MAKE_EXTRAS_LIBRARY_ONLY ON"
+  OPTIONS "MAKE_EXPARX_ARC_LIBRARY_ONLY ON"
+  OPTIONS "MAKE_EXTRAS_ARC_LIBRARY_TOOLS ON"
+  OPTIONS "MAKE_EXPARX_RSI_LIBRARY_ONLY ON"
+  OPTIONS "MAKE_EXPARX_RSI_LIBRARY_TOOLS ON"
 )
-if(extras_ADDED)
+if(extras_rsi_ADDED)
   #
   # NOTE:  enable c++11 to avoid compilation errors, and force spdlog into release build
   #
-  print(STATUS "Configuring extras build properties")
-  set_target_properties(extras PROPERTIES CMAKE_BUILD_TYPE Release)
+  print(STATUS "Configuring extras_rsi build properties")
+  set_target_properties(extras_rsi PROPERTIES CMAKE_BUILD_TYPE Release)
 else()
-  print(WARNING "extras was not configured properly")
+  print(WARNING "extras_rsi was not configured properly")
 endif()
+
 
 #
 # HACK: glob src files and header files
@@ -150,7 +155,7 @@ file(GLOB_RECURSE EXTRAS_MON_SOURCE CONFIGURE_DEPENDS "${SOURCES}/*.cpp")
 #
 add_library(${PROJECT_NAME} SHARED ${EXTRAS_MON_HEADERS} ${EXTRAS_MON_SOURCE})
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
-target_link_libraries(${PROJECT_NAME} PRIVATE stdc++fs extras)
+target_link_libraries(${PROJECT_NAME} PRIVATE stdc++fs extras_rsi extras_arc extras )
 
 #
 # NOTE: declare unit test cases here all source should have adequate test cases whether they be mock
@@ -163,7 +168,7 @@ if (NOT MAKE_EXTRAS_MON_LIBRARY_ONLY)
     set(TEST_EXEC "run-unittests-${PROJECT_NAME}")
     add_executable(${TEST_EXEC} ${EXTRAS_MON_TESTS})
     target_include_directories(${TEST_EXEC} PUBLIC ${INCLUDES})
-    target_link_libraries(${TEST_EXEC} PRIVATE ${PROJECT_NAME} stdc++fs extras )
+    target_link_libraries(${TEST_EXEC} PRIVATE ${PROJECT_NAME} stdc++fs extras_rsi extras_arc extras )
   endif()
 endif()
 
@@ -173,10 +178,10 @@ endif()
 # includes ALL headers and sources under include/ and src/. So, to keep two or more main() 
 # declarations seperate, we place any sources that have a main() in the instances/ folder
 #
-if( NOT MAKE_EXTRAS_MON_LIBRARY_ONLY OR MAKE_EXTRAS_MON_LIBRARY_EXECUTABLES)
+if( NOT MAKE_EXTRAS_MON_LIBRARY_ONLY OR MAKE_EXTRAS_MON_LIBRARY_TOOLS)
 add_executable(main instances/main.cpp) 
 target_include_directories(main PUBLIC ${INCLUDES})
-target_link_libraries(main PRIVATE ${PROJECT_NAME} stdc++fs extras )
+target_link_libraries(main PRIVATE ${PROJECT_NAME} stdc++fs extras_rsi extras_arc extras )
 endif()
 
 #
