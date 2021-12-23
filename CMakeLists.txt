@@ -124,7 +124,7 @@ print(STATUS "CMAKE_C_FLAGS: ${CMAKE_C_FLAGS}")
 CPMAddPackage(
   NAME extras_rsi
   GITHUB_REPOSITORY perriera/extras_rsi
-  VERSION 4.19.0
+  VERSION 4.21.0
   OPTIONS "MAKE_SPDLOG_SHARED OFF"
   OPTIONS "MAKE_EXTRAS_LIBRARY_ONLY ON"
   OPTIONS "MAKE_EXPARX_ARC_LIBRARY_ONLY ON"
@@ -179,9 +179,9 @@ endif()
 # declarations seperate, we place any sources that have a main() in the instances/ folder
 #
 if( NOT MAKE_EXTRAS_MON_LIBRARY_ONLY OR MAKE_EXTRAS_MON_LIBRARY_TOOLS)
-add_executable(main instances/main.cpp) 
-target_include_directories(main PUBLIC ${INCLUDES})
-target_link_libraries(main PRIVATE ${PROJECT_NAME} stdc++fs extras_rsi extras_arc extras )
+add_executable(extras_mon_app instances/main.cpp) 
+target_include_directories(extras_mon_app PUBLIC ${INCLUDES})
+target_link_libraries(extras_mon_app PRIVATE ${PROJECT_NAME} stdc++fs extras_rsi extras_arc extras )
 endif()
 
 #
